@@ -5,6 +5,14 @@ import * as React from 'react'
 
 const CountContext = React.createContext()
 
+function useCount() {
+  const value = React.useContext(CountContext)
+  if (value === undefined) {
+    throw new Error('useCount must be called within a CountProvider')
+  }
+  return value
+}
+
 function CountProvider({children}) {
   const [count, setCount] = React.useState(0)
   const value = [count, setCount]
@@ -13,12 +21,12 @@ function CountProvider({children}) {
 }
 
 function CountDisplay() {
-  const [count] = React.useContext(CountContext)
+  const [count] = useCount()
   return <div>{`The current count is ${count}`}</div>
 }
 
 function Counter() {
-  const [, setCount] = React.useContext(CountContext)
+  const [, setCount] = useCount()
   const increment = () => setCount(c => c + 1)
   return <button onClick={increment}>Increment count</button>
 }
